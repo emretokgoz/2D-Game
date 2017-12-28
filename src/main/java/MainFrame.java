@@ -2,8 +2,8 @@ import javax.swing.*;
 
 
 public class MainFrame extends JFrame {
-    public static final int WIDTH = 500;
-    public static final int HEIGHT = 700;
+    public static final int WIDTH = 490;
+    public static final int HEIGHT = 670;
 
     public MainFrame() {
         this.setTitle("2D Game");

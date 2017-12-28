@@ -12,10 +12,9 @@ public class SettingsPanel extends JPanel {
         setFocusable(true);
 
         setLayout(null);
-        returnToMainMenu.setBounds(0,0,170,30);
+        returnToMainMenu.setBounds(0, 0, 170, 30);
         asd.setBounds(180, 350, 100, 30);
 
-        add(asd);
 
         returnToMainMenu.addActionListener(new ActionListener() {
             @Override
@@ -28,5 +27,6 @@ public class SettingsPanel extends JPanel {
             }
         });
         add(returnToMainMenu);
+        add(asd);
     }
 }
