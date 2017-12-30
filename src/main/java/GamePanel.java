@@ -1,3 +1,5 @@
+import com.sun.beans.editors.ColorEditor;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -15,11 +17,13 @@ public class GamePanel extends JPanel implements KeyListener {
     int move = 40;
     int topMenuHeight = 40;
     int score = 0;
-    int a;
-    int b;
-    int c;
-    int v;
+    int firstTargetX;
+    int firstTargetY;
     boolean isPaused = false;
+    int secondTargetX;
+    int secondTargetY;
+    int secondTargetGenerate = 1;
+    int outOfScreen = 800;
 
     Random rand = new Random();
 
@@ -53,7 +57,7 @@ public class GamePanel extends JPanel implements KeyListener {
                 if (!isPaused) {
                     isPaused = true;
                     pauseOrPlay.setText("PLAY");
-                    
+
                 } else {
                     isPaused = false;
                     pauseOrPlay.setText("PAUSE");
@@ -76,14 +80,36 @@ public class GamePanel extends JPanel implements KeyListener {
         g.setColor(Color.cyan);
         setBackground(Color.white);
         g.fillOval(x, y, diameter, diameter);
-        Font myFont = new Font("Courier New", Font.BOLD, 20);
-        g.setFont(myFont);
 
+        Font myFont = new Font(Font.SANS_SERIF, Font.BOLD, 20);
+        g.setFont(myFont);
         g.setColor(Color.GRAY);
-        g.drawString("Score: " + score, 200, 40);
+        g.drawString("Score:", 200, 40);
+        g.setColor(Color.CYAN);
+        if ((score >=5 && score <=9) || (score >=20 && score <=24) ||(score >=35 && score <=39)){
+            g.setColor(Color.ORANGE);
+        }
+        if ((score >=10 && score <=14) || (score >=25 && score <=29) || (score >=40 && score <=44)){
+            g.setColor(Color.RED);
+        }
+        g.drawString(" " + score, 275, 40);
+
 
         g.setColor(Color.GREEN);
-        g.fillOval(c, v, 40, 40);
+        g.fillOval(firstTargetX, firstTargetY, 40, 40);
+        if (score == 5 * secondTargetGenerate) {
+            g.setColor(Color.ORANGE);
+
+            g.fillOval(secondTargetX, secondTargetY, 40, 40);
+        }
+
+        if (isPaused) {
+            Font font2 = new Font(Font.SANS_SERIF, Font.BOLD, 80);
+            g.setFont(font2);
+            g.setColor(Color.RED);
+            g.drawString("PAUSED", 80, 300);
+        }
+        repaint();
     }
 
     @Override
@@ -98,7 +124,7 @@ public class GamePanel extends JPanel implements KeyListener {
                     break;
                 }
                 if (!isPaused) {
-                    x += 40;
+                    x += move;
                 }
                 onMove();
                 break;
@@ -107,7 +133,7 @@ public class GamePanel extends JPanel implements KeyListener {
                     break;
                 }
                 if (!isPaused) {
-                    x -= 40;
+                    x -= move;
                 }
                 onMove();
                 break;
@@ -116,7 +142,7 @@ public class GamePanel extends JPanel implements KeyListener {
                     break;
                 }
                 if (!isPaused) {
-                    y -= 40;
+                    y -= move;
                 }
                 onMove();
                 break;
@@ -125,7 +151,7 @@ public class GamePanel extends JPanel implements KeyListener {
                     break;
                 }
                 if (!isPaused) {
-                    y += 40;
+                    y += move;
                 }
                 onMove();
                 break;
@@ -137,7 +163,15 @@ public class GamePanel extends JPanel implements KeyListener {
     }
 
     public boolean didEat() {
-        if (x == c && y == v) {
+        if (x == firstTargetX && y == firstTargetY) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean secondTargetEat() {
+        if (x == secondTargetX && y == secondTargetY) {
             return true;
         } else {
             return false;
@@ -147,22 +181,44 @@ public class GamePanel extends JPanel implements KeyListener {
     public void onMove() {
         if (didEat()) {
             score++;
-            newTarget();
+            if (score != 5 * secondTargetGenerate) {
+                newTarget();
+            } else {
+                firstTargetX = 800;
+                firstTargetY = 800;
+            }
+            secondTarget();
+        }
+        if (secondTargetEat()) {
+            score += 2;
+            secondTargetX = outOfScreen;
+            secondTargetY = outOfScreen;
+            secondTargetGenerate++;
+            if (score != 5 * secondTargetGenerate) {
+                newTarget();
+            } else {
+                firstTargetX = outOfScreen;
+                firstTargetY = outOfScreen;
+            }
         }
         repaint();
     }
 
     public void newTarget() {
-        //int[] a = new int[]{40, 80, 120, 160, 200, 240, 280, 320, 360, 400};
-        //int[] b = new int[]{40, 80, 120, 160, 200, 240, 280, 320, 360, 400, 440, 480, 520, 560};
-
-        //c = (a[rand.nextInt(a.length)]);
-        //v = (b[rand.nextInt(b.length)]);
-
         while (true) {
-            c = rand.nextInt((MainFrame.WIDTH - diameter) / move - 1) * move;
-            v = rand.nextInt((MainFrame.HEIGHT - diameter - topMenuHeight) / move - 1) * move + topMenuHeight;
-            if (c != x && v != y) {
+            firstTargetX = rand.nextInt((MainFrame.WIDTH - diameter) / move - 1) * move;
+            firstTargetY = rand.nextInt((MainFrame.HEIGHT - diameter - topMenuHeight) / move - 1) * move + topMenuHeight;
+            if (firstTargetX != x && firstTargetY != y) {
+                break;
+            }
+        }
+    }
+
+    public void secondTarget() {
+        while (true) {
+            secondTargetX = rand.nextInt((MainFrame.WIDTH - diameter) / move - 1) * move;
+            secondTargetY = rand.nextInt((MainFrame.HEIGHT - diameter - topMenuHeight) / move - 1) * move + topMenuHeight;
+            if ((secondTargetX != x && secondTargetY != y) && (secondTargetX != firstTargetX && secondTargetY != firstTargetY)) {
                 break;
             }
         }
