@@ -1,4 +1,3 @@
-import com.sun.beans.editors.ColorEditor;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,8 +10,8 @@ import java.util.Random;
 
 public class GamePanel extends JPanel implements KeyListener {
 
-    int x = 0;
-    int y = 40;
+    int BallX;
+    int BallY;
     int diameter = 40;
     int move = 40;
     int topMenuHeight = 40;
@@ -68,8 +67,8 @@ public class GamePanel extends JPanel implements KeyListener {
         add(returnToMainMenu);
         add(pauseOrPlay);
 
-        x = rand.nextInt((MainFrame.WIDTH - diameter) / move - 1) * move;
-        y = rand.nextInt((MainFrame.HEIGHT - diameter - topMenuHeight) / move - 1) * move + topMenuHeight;
+        BallX = rand.nextInt((MainFrame.WIDTH - diameter) / move - 1) * move;
+        BallY = rand.nextInt((MainFrame.HEIGHT - diameter - topMenuHeight) / move - 1) * move + topMenuHeight;
 
         newTarget();
     }
@@ -77,38 +76,43 @@ public class GamePanel extends JPanel implements KeyListener {
     @Override
     public void paint(Graphics g) {
         super.paint(g);
-        g.setColor(Color.cyan);
-        setBackground(Color.white);
-        g.fillOval(x, y, diameter, diameter);
+        if (SettingsPanel.x.equals("CYAN")) {
+            g.setColor(Color.cyan);
+        } else if (SettingsPanel.x.equals("MAGENTA")) {
+            g.setColor(Color.magenta);
+        } else if (SettingsPanel.x.equals("RED")) {
+            g.setColor(Color.red);
+        } else if (SettingsPanel.x.equals("YELLOW")) {
+            g.setColor(Color.yellow);
+        } else if (SettingsPanel.x.equals("BLUE")) {
+            g.setColor(Color.blue);
+        }
 
-        Font myFont = new Font(Font.SANS_SERIF, Font.BOLD, 20);
-        g.setFont(myFont);
+        setBackground(Color.white);
+        g.fillOval(BallX, BallY, diameter, diameter);
+        g.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 20));
         g.setColor(Color.GRAY);
         g.drawString("Score:", 200, 40);
         g.setColor(Color.CYAN);
-        if ((score >=5 && score <=9) || (score >=20 && score <=24) ||(score >=35 && score <=39)){
+        if (ScoreColorOrange()) {
             g.setColor(Color.ORANGE);
         }
-        if ((score >=10 && score <=14) || (score >=25 && score <=29) || (score >=40 && score <=44)){
+        if (ScoreColorRed()) {
             g.setColor(Color.RED);
         }
         g.drawString(" " + score, 275, 40);
-
-
         g.setColor(Color.GREEN);
         g.fillOval(firstTargetX, firstTargetY, 40, 40);
         if (score == 5 * secondTargetGenerate) {
             g.setColor(Color.ORANGE);
-
             g.fillOval(secondTargetX, secondTargetY, 40, 40);
         }
-
         if (isPaused) {
-            Font font2 = new Font(Font.SANS_SERIF, Font.BOLD, 80);
-            g.setFont(font2);
+            g.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 80));
             g.setColor(Color.RED);
             g.drawString("PAUSED", 80, 300);
         }
+
         repaint();
     }
 
@@ -120,38 +124,38 @@ public class GamePanel extends JPanel implements KeyListener {
     public void keyPressed(KeyEvent e) {
         switch (e.getKeyCode()) {
             case KeyEvent.VK_RIGHT:
-                if (x == 440) {
+                if (BallX == 440) {
                     break;
                 }
                 if (!isPaused) {
-                    x += move;
+                    BallX += move;
                 }
                 onMove();
                 break;
             case KeyEvent.VK_LEFT:
-                if (x == 0) {
+                if (BallX == 0) {
                     break;
                 }
                 if (!isPaused) {
-                    x -= move;
+                    BallX -= move;
                 }
                 onMove();
                 break;
             case KeyEvent.VK_UP:
-                if (y == 40) {
+                if (BallY == 40) {
                     break;
                 }
                 if (!isPaused) {
-                    y -= move;
+                    BallY -= move;
                 }
                 onMove();
                 break;
             case KeyEvent.VK_DOWN:
-                if (y == 600) {
+                if (BallY == 600) {
                     break;
                 }
                 if (!isPaused) {
-                    y += move;
+                    BallY += move;
                 }
                 onMove();
                 break;
@@ -163,7 +167,7 @@ public class GamePanel extends JPanel implements KeyListener {
     }
 
     public boolean didEat() {
-        if (x == firstTargetX && y == firstTargetY) {
+        if (BallX == firstTargetX && BallY == firstTargetY) {
             return true;
         } else {
             return false;
@@ -171,7 +175,7 @@ public class GamePanel extends JPanel implements KeyListener {
     }
 
     public boolean secondTargetEat() {
-        if (x == secondTargetX && y == secondTargetY) {
+        if (BallX == secondTargetX && BallY == secondTargetY) {
             return true;
         } else {
             return false;
@@ -208,7 +212,7 @@ public class GamePanel extends JPanel implements KeyListener {
         while (true) {
             firstTargetX = rand.nextInt((MainFrame.WIDTH - diameter) / move - 1) * move;
             firstTargetY = rand.nextInt((MainFrame.HEIGHT - diameter - topMenuHeight) / move - 1) * move + topMenuHeight;
-            if (firstTargetX != x && firstTargetY != y) {
+            if (firstTargetX != BallX && firstTargetY != BallY) {
                 break;
             }
         }
@@ -218,9 +222,25 @@ public class GamePanel extends JPanel implements KeyListener {
         while (true) {
             secondTargetX = rand.nextInt((MainFrame.WIDTH - diameter) / move - 1) * move;
             secondTargetY = rand.nextInt((MainFrame.HEIGHT - diameter - topMenuHeight) / move - 1) * move + topMenuHeight;
-            if ((secondTargetX != x && secondTargetY != y) && (secondTargetX != firstTargetX && secondTargetY != firstTargetY)) {
+            if ((secondTargetX != BallX && secondTargetY != BallY) && (secondTargetX != firstTargetX && secondTargetY != firstTargetY)) {
                 break;
             }
+        }
+    }
+
+    public boolean ScoreColorOrange() {
+        if ((score >= 5 && score <= 9) || (score >= 20 && score <= 24) || (score >= 35 && score <= 39)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean ScoreColorRed() {
+        if ((score >= 10 && score <= 14) || (score >= 25 && score <= 29) || (score >= 40 && score <= 44)) {
+            return true;
+        } else {
+            return false;
         }
     }
 }

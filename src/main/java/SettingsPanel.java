@@ -1,21 +1,18 @@
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 
 public class SettingsPanel extends JPanel {
-    public SettingsPanel(MainFrame mainFrame) {
+    public static String x;
 
+    public SettingsPanel(MainFrame mainFrame) {
         setSize(MainFrame.WIDTH, MainFrame.HEIGHT);
-        JButton asd = new JButton("asd");
         JButton returnToMainMenu = new JButton("Return To Main Menu");
         setFocusable(true);
-
         setLayout(null);
         returnToMainMenu.setBounds(0, 0, 170, 30);
-        asd.setBounds(180, 350, 100, 30);
-
-
         returnToMainMenu.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -27,6 +24,19 @@ public class SettingsPanel extends JPanel {
             }
         });
         add(returnToMainMenu);
-        add(asd);
+
+        String[] ColorStrings = {"CYAN", "MAGENTA", "RED", "YELLOW", "BLUE"};
+        JComboBox ColorList = new JComboBox(ColorStrings);
+        ColorList.setBounds(160, 150, 170, 30);
+
+        ColorList.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                x = String.valueOf(ColorList.getSelectedItem());
+            }
+        });
+        add(ColorList);
+
     }
 }
