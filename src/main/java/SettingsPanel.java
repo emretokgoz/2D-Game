@@ -1,11 +1,10 @@
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 
 public class SettingsPanel extends JPanel {
-    public static String x;
+    public static String x = "CYAN";
 
     public SettingsPanel(MainFrame mainFrame) {
         setSize(MainFrame.WIDTH, MainFrame.HEIGHT);
