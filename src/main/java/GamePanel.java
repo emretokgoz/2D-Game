@@ -23,6 +23,7 @@ public class GamePanel extends JPanel implements KeyListener {
     int secondTargetY;
     int secondTargetGenerate = 1;
     int outOfScreen = 800;
+    int randomScore;
 
     Random rand = new Random();
 
@@ -76,43 +77,46 @@ public class GamePanel extends JPanel implements KeyListener {
     @Override
     public void paint(Graphics g) {
         super.paint(g);
-        if (SettingsPanel.x.equals("CYAN")) {
+        if (SettingsPanel.ballColor.equals("CYAN")) {
             g.setColor(Color.cyan);
-        } else if (SettingsPanel.x.equals("MAGENTA")) {
+        } else if (SettingsPanel.ballColor.equals("MAGENTA")) {
             g.setColor(Color.magenta);
-        } else if (SettingsPanel.x.equals("RED")) {
+        } else if (SettingsPanel.ballColor.equals("RED")) {
             g.setColor(Color.red);
-        } else if (SettingsPanel.x.equals("YELLOW")) {
+        } else if (SettingsPanel.ballColor.equals("YELLOW")) {
             g.setColor(Color.yellow);
-        } else if (SettingsPanel.x.equals("BLUE")) {
+        } else if (SettingsPanel.ballColor.equals("BLUE")) {
             g.setColor(Color.blue);
         }
 
         setBackground(Color.white);
         g.fillOval(BallX, BallY, diameter, diameter);
         g.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 20));
-        g.setColor(Color.GRAY);
-        g.drawString("Score:", 200, 40);
-        g.setColor(Color.CYAN);
+        if (ScoreColorCyan()) {
+            g.setColor(Color.CYAN);
+        }
         if (ScoreColorOrange()) {
             g.setColor(Color.ORANGE);
         }
         if (ScoreColorRed()) {
             g.setColor(Color.RED);
         }
-        g.drawString(" " + score, 275, 40);
+        if (ScoreColorBlue()) {
+            g.setColor(Color.BLUE);
+        }
+        g.drawString("Score:  " + score, 200, 40);
         g.setColor(Color.GREEN);
         g.fillOval(firstTargetX, firstTargetY, 40, 40);
         if (score == 5 * secondTargetGenerate) {
             g.setColor(Color.ORANGE);
             g.fillOval(secondTargetX, secondTargetY, 40, 40);
         }
+
         if (isPaused) {
             g.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 80));
             g.setColor(Color.RED);
             g.drawString("PAUSED", 80, 300);
         }
-
         repaint();
     }
 
@@ -188,13 +192,14 @@ public class GamePanel extends JPanel implements KeyListener {
             if (score != 5 * secondTargetGenerate) {
                 newTarget();
             } else {
-                firstTargetX = 800;
-                firstTargetY = 800;
+                firstTargetX = outOfScreen;
+                firstTargetY = outOfScreen;
+                secondTarget();
             }
-            secondTarget();
         }
         if (secondTargetEat()) {
-            score += 2;
+            randomScore = rand.nextInt(3) + 1;
+            score += randomScore;
             secondTargetX = outOfScreen;
             secondTargetY = outOfScreen;
             secondTargetGenerate++;
@@ -228,8 +233,16 @@ public class GamePanel extends JPanel implements KeyListener {
         }
     }
 
+    public boolean ScoreColorCyan() {
+        if ((score >= 0 && score <= 4) || (score >= 20 && score <= 24) || (score >= 40 && score <= 44) || (score >= 60 && score <= 64)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public boolean ScoreColorOrange() {
-        if ((score >= 5 && score <= 9) || (score >= 20 && score <= 24) || (score >= 35 && score <= 39)) {
+        if ((score >= 5 && score <= 9) || (score >= 25 && score <= 29) || (score >= 45 && score <= 49) || (score >= 69 && score <= 70)) {
             return true;
         } else {
             return false;
@@ -237,7 +250,15 @@ public class GamePanel extends JPanel implements KeyListener {
     }
 
     public boolean ScoreColorRed() {
-        if ((score >= 10 && score <= 14) || (score >= 25 && score <= 29) || (score >= 40 && score <= 44)) {
+        if ((score >= 10 && score <= 14) || (score >= 30 && score <= 34) || (score >= 50 && score <= 54) || (score >= 74 && score <= 79)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean ScoreColorBlue() {
+        if ((score >= 15 && score <= 19) || (score >= 35 && score <= 39) || (score >= 55 && score <= 59) || (score >= 80 && score <= 84)) {
             return true;
         } else {
             return false;
