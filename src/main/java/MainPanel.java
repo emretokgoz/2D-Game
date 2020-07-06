@@ -8,7 +8,7 @@ public class MainPanel extends JPanel {
         this.setSize(MainFrame.WIDTH, MainFrame.HEIGHT);
         JButton startButton = new JButton("START");
         setLayout(null);
-        startButton.setBounds(185, 310, 100, 30);
+        startButton.setBounds(175, 310, 120, 30);//245 130
         startButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -22,7 +22,7 @@ public class MainPanel extends JPanel {
         this.add(startButton);
 
         JButton settingsButton = new JButton("SETTINGS");
-        settingsButton.setBounds(160, 350, 150, 30);
+        settingsButton.setBounds(175, 350, 120, 30);
         settingsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
